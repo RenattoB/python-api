@@ -12,8 +12,8 @@ async def consultaPaciente(request: Request):
 
 @app.get('/pruebita')
 async def pregunta():
-    return 'Se colgo la api con exito'
-    
+    return 'Se colgo la api con exito, manco mamon'
+
 #Url crear cita
 
 #Url eliminar cita
