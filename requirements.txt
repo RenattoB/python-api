@@ -109,7 +109,6 @@ python-dotenv==0.18.0
 python-multipart==0.0.5
 PythonTurtle==0.3.2
 pytz==2019.3
-pywin32==300
 PyYAML==5.4.1
 recognizers-text==1.0.2a2
 recognizers-text-choice==1.0.2a2
@@ -132,11 +131,6 @@ sqlparse==0.3.1
 starlette==0.14.2
 string-grouper==0.4.0
 tabulate==0.8.9
-tensorboard==2.5.0
-tensorboard-data-server==0.6.1
-tensorboard-plugin-wit==1.8.0
-tensorflow==2.5.0
-tensorflow-estimator==2.5.0
 termcolor==1.1.0
 threadpoolctl==2.1.0
 typing-extensions==3.7.4.3
