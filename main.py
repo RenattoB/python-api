@@ -5,10 +5,15 @@ app = FastAPI()
 
 #Url consultar paciente
 @app.post('/dniPaciente')
-async def consultaPaciente(request: Request):    
-    body = await request.json()
-    nombre = consultarPaciente(body['dni'])
-    return nombre
+async def consultaPaciente(request: Request):   
+    try: 
+        print('Entro al post')
+        body = await request.json()
+        nombre = consultarPaciente(body['dni'])
+        print(f'Salio de la funcion {nombre}')
+        return nombre
+    except Exception as e :
+        print(f'Error: {e}')    
 
 @app.get('/pruebita')
 async def pregunta():
