@@ -12,7 +12,6 @@ def consultarPaciente(dni):
     query = f'SELECT * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
     cursor.execute(query)
     row = cursor.fetchall()
-    print(row)
     if row:
         for i in row:
             resultado = list(i)
@@ -20,7 +19,6 @@ def consultarPaciente(dni):
     else:
         return 0
 
-print(consultarPaciente(83249123))
 
 
 
