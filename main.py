@@ -1,4 +1,5 @@
 from fastapi import Request, FastAPI
+import json
 import pyodbc
 
 server = 'usilserv.database.windows.net'
@@ -13,17 +14,18 @@ app = FastAPI()
 async def consultaPaciente(request: Request):   
     try: 
         print('Entro al post')
-        body = await request.json()
+        body = await json.dumps(request)
         nombre = consultarPaciente(body['dni'])
         print(f'Salio de la funcion {nombre}')
         return nombre
     except Exception as e :
-        print(f'Error: {e}')   
+        return f'Error: {e}'   
 
 @app.post('/obtenerHorario')
 async def obtenerHorario(request: Request):
     try:
         body = await request.json()
+        print(body)
         idEspecialidad = body['idEspecialidad']
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
@@ -37,7 +39,7 @@ async def obtenerHorario(request: Request):
         else:
             return 0
     except Exception as e :
-        print(f'Error: {e}') 
+        return f'Error: {e}' 
 
         
 @app.post('/postPrueba')
