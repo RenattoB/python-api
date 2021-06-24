@@ -13,10 +13,9 @@ with open('appsetings.json', 'r') as jsonFile:
 
 def consultarPaciente(dni):
     try:
-        print('entro funcion')
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
+        query = f'SELECT TOP 1 * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
         cursor.execute(query)
         row = cursor.fetchall()
         if row:
@@ -30,16 +29,19 @@ def consultarPaciente(dni):
 
 def consultarHorario(idEspecialidad):    
     try:
-        print('entro funcion')
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT * FROM FN_VERHORARIO({idEspecialidad})'
+        query = f'SELECT TOP 1 * FROM FN_VERHORARIO({idEspecialidad})'
         cursor.execute(query)
         row = cursor.fetchall()
+        respuesta = {}
         if row:
             for i in row:
-                resultado = list(i)
-            return resultado
+                respuesta['codHorario'] = i[0]
+                respuesta['dia'] = i[1]
+                respuesta['hora'] = i[2]
+                respuesta['codDoctor'] = i[3]
+            return respuesta
         else:
             return 0
     except (Exception, pyodbc.Error) as e :
