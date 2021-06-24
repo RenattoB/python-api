@@ -1,13 +1,19 @@
 import pyodbc
+import json
 
-server = 'usilserv.database.windows.net'
-database = 'clinicDB'
-username = 'inteligencia'
-password = '@ia202106'   
-driver= '{ODBC Driver 17 for SQL Server}'
+
+with open('appsetings.json', 'r') as jsonFile:
+    body = json.load(jsonFile)
+    server = body['server']
+    database = body['database']
+    username = body['username']
+    password = body['password']   
+    driver = body['driver']
+
 
 def consultarPaciente(dni):
     try:
+        print('entro funcion')
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
         query = f'SELECT * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
@@ -20,8 +26,24 @@ def consultarPaciente(dni):
         else:
             return 0
     except (Exception, pyodbc.Error) as e :
-        print(f'Error: {e}') 
+       return f'Error: {e}'
 
+def consultarHorario(idEspecialidad):    
+    try:
+        print('entro funcion')
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = f'SELECT * FROM FN_VERHORARIO({idEspecialidad})'
+        cursor.execute(query)
+        row = cursor.fetchall()
+        if row:
+            for i in row:
+                resultado = list(i)
+            return resultado
+        else:
+            return 0
+    except (Exception, pyodbc.Error) as e :
+        return f'Error: {e}' 
 
 
 
