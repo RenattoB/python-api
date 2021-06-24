@@ -1,4 +1,4 @@
-from fastapi import Request, FastAPI, requests
+from fastapi import Request, FastAPI
 import pyodbc
 
 server = 'usilserv.database.windows.net'
@@ -19,6 +19,26 @@ async def consultaPaciente(request: Request):
         return nombre
     except Exception as e :
         print(f'Error: {e}')   
+
+@app.post('/obtenerHorario')
+async def obtenerHorario(request: Request):
+    try:
+        body = await request.json()
+        idEspecialidad = body['idEspecialidad']
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = f'SELECT * FROM FN_VERHORARIO({idEspecialidad})'
+        cursor.execute(query)
+        row = cursor.fetchall()
+        if row:
+            for i in row:
+                resultado = list(i)
+            return resultado
+        else:
+            return 0
+    except Exception as e :
+        print(f'Error: {e}') 
+
         
 @app.post('/postPrueba')
 async def postPrueba(request:Request):
