@@ -1,4 +1,4 @@
-from fastapi import Request, FastAPI
+from fastapi import Request, FastAPI, requests
 from BD import *
 
 app = FastAPI()
@@ -13,8 +13,13 @@ async def consultaPaciente(request: Request):
         print(f'Salio de la funcion {nombre}')
         return nombre
     except Exception as e :
-        print(f'Error: {e}')    
-
+        print(f'Error: {e}')   
+        
+@app.post('/postPrueba')
+async def postPrueba(request:Request):
+    body = await request.json()
+    return body['dni']
+    
 @app.get('/pruebita')
 async def pregunta():
     return 'Se colgo la api con exito, manco mamon'
