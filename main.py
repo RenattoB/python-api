@@ -32,7 +32,7 @@ async def crearCita(request: Request):
     try:
         body = await request.json()
         idHorario, dni = body['idHorario'], body['dni']
-        nuevaCita = crearCita(idHorario, dni)
+        nuevaCita = crear_Cita(idHorario, dni)
         return nuevaCita
     except Exception as e :
         return f'Error: {e}' 
