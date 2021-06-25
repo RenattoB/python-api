@@ -48,6 +48,18 @@ async def reservarCita(request: Request):
     except Exception as e :
         return f'Error: {e}' 
 
+#Eliminar cita         
+
+@app.post('/eliminarCita')
+async def eliminarCita(request: Request):
+    try:
+        body = await request.json()
+        idCita = body['idCita']
+        citaEliminada = eliminarBDCita(idCita)
+        return citaEliminada
+    except Exception as e :
+        return f'Error: {e}'
+
 @app.get('/arrayPrueba')
 def arregloPrueba():
     dict = {

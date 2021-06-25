@@ -79,5 +79,18 @@ def verCitas(dni):
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 
+def eliminarBDCita(idCita):    
+    try:
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = f'EXEC CANCELARCITA {idCita}'
+        cursor.execute(query)
+        cursor.commit()
+        cursor.close()
+        conn.close()
+        return 1
+    except (Exception, pyodbc.Error) as e :
+        return f'Error: {e}' 
+
 
 
