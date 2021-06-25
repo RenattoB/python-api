@@ -18,6 +18,7 @@ def consultarPaciente(dni):
         query = f'SELECT TOP 1 * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
         cursor.execute(query)
         row = cursor.fetchall()
+        print(row)
         if row:
             for i in row:
                 resultado = list(i)
@@ -47,5 +48,16 @@ def consultarHorario(idEspecialidad):
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 
+def registrarCita(idHorario, dni):    
+    try:
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = f'EXEC SP_CREAR_CITA {idHorario}, {dni}'
+        cursor.execute(query)
+        cursor.commit()
+        cursor.close()
+        conn.close()
+    except (Exception, pyodbc.Error) as e :
+        return f'Error: {e}' 
 
 

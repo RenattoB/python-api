@@ -27,3 +27,9 @@ async def obtenerHorario(request: Request):
         return f'Error: {e}' 
 
 
+
+
+
+
+
+
