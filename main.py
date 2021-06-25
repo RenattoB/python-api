@@ -26,6 +26,18 @@ async def obtenerHorario(request: Request):
     except Exception as e :
         return f'Error: {e}' 
 
+#Crear cita
+@app.post('/crearCita')
+async def crearCita(request: Request):
+    try:
+        body = await request.json()
+        idEspecialidad = body['idEspecialidad']
+        horario = consultarHorario(idEspecialidad)
+        return horario
+    except Exception as e :
+        return f'Error: {e}' 
+
+
 
 
 

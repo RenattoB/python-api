@@ -48,7 +48,7 @@ def consultarHorario(idEspecialidad):
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 
-def registrarCita(idHorario, dni):    
+def crearCita(idHorario, dni):    
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
