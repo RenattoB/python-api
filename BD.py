@@ -57,6 +57,7 @@ def crearCita(idHorario, dni):
         cursor.commit()
         cursor.close()
         conn.close()
+        return 'Se creo la cita con éxito uwu'
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 

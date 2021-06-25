@@ -31,9 +31,9 @@ async def obtenerHorario(request: Request):
 async def crearCita(request: Request):
     try:
         body = await request.json()
-        idEspecialidad = body['idEspecialidad']
-        horario = consultarHorario(idEspecialidad)
-        return horario, body['nombre']
+        idHorario, dni = body['idHorario'], body['dni']
+        nuevaCita = crearCita(idHorario, dni)
+        return nuevaCita
     except Exception as e :
         return f'Error: {e}' 
 
