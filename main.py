@@ -22,7 +22,7 @@ async def obtenerHorario(request: Request):
         body = await request.json()
         idEspecialidad = body['idEspecialidad']
         horario = consultarHorario(idEspecialidad)
-        return horario, body['nombre']
+        return horario
     except Exception as e :
         return f'Error: {e}' 
 
@@ -44,10 +44,16 @@ async def reservarCita(request: Request):
         body = await request.json()
         dni = body['dni']
         citas = verCitas(dni)
-        return citas
+        return {"citas" : citas}
     except Exception as e :
         return f'Error: {e}' 
 
+@app.get('/arrayPrueba')
+def arregloPrueba():
+    dict = {
+        "nombres": [{"id": "12", "nombre": "Renatto", "apellido":"Baca"} , {"id": "15","nombre" : "Dariel", "apellido": "Solorzano"}, {"id": "20","nombre" : "Julio", "apellido": "Ponce"}] 
+    }
+    return dict
 
 
 

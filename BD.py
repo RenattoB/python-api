@@ -57,7 +57,7 @@ def crearCita(idHorario, dni):
         cursor.commit()
         cursor.close()
         conn.close()
-        return 'Se creo la cita con éxito uwu'
+        return 1
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 
@@ -65,13 +65,14 @@ def verCitas(dni):
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT * FROM t_cita WHERE COD_PACIENTE = {dni}'
+        query = f'SELECT * FROM FN_VERCITA({dni})'
         cursor.execute(query)
         row = cursor.fetchall()
         respuesta = []
         if row:
             for i in row:
-                respuesta.append(list(i))
+                dictTemp = {"codCita" : i[0], "fecha": i[1], "hora" : i[2], "nombreCita" : i[3]}
+                respuesta.append(dictTemp)
             return respuesta
         else: 
             return 0
