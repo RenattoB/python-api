@@ -37,6 +37,16 @@ async def reservarCita(request: Request):
     except Exception as e :
         return f'Error: {e}' 
 
+#Ver Citas
+@app.post('/verCitasPaciente')
+async def reservarCita(request: Request):
+    try:
+        body = await request.json()
+        dni = body['dni']
+        citas = verCitas(dni)
+        return citas
+    except Exception as e :
+        return f'Error: {e}' 
 
 
 

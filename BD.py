@@ -61,4 +61,22 @@ def crearCita(idHorario, dni):
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 
+def verCitas(dni):    
+    try:
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = f'SELECT * FROM t_cita WHERE COD_PACIENTE = {dni}'
+        cursor.execute(query)
+        row = cursor.fetchall()
+        respuesta = []
+        if row:
+            for i in row:
+                respuesta.append(list(i))
+            return respuesta
+        else: 
+            return 0
+    except (Exception, pyodbc.Error) as e :
+        return f'Error: {e}' 
+
+
 
