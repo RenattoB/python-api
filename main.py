@@ -28,11 +28,11 @@ async def obtenerHorario(request: Request):
 
 #Crear cita
 @app.post('/crearCita')
-async def crearCita(request: Request):
+async def reservarCita(request: Request):
     try:
         body = await request.json()
         idHorario, dni = body['idHorario'], body['dni']
-        nuevaCita = crear_Cita(idHorario, dni)
+        nuevaCita = crearCita(idHorario, dni)
         return nuevaCita
     except Exception as e :
         return f'Error: {e}' 
