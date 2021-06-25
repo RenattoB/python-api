@@ -28,7 +28,7 @@ async def obtenerHorario(request: Request):
 
 #Crear cita
 @app.post('/crearCita')
-async def crearCita(request: Request):
+async def reservarCita(request: Request):
     try:
         body = await request.json()
         idHorario, dni = body['idHorario'], body['dni']
