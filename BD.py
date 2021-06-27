@@ -15,7 +15,7 @@ def consultarPaciente(dni):
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT TOP 1 * FROM T_PACIENTE WHERE COD_PACIENTE = {dni}'
+        query = f'SELECT TOP 1 * FROM T_PACIENTE WHERE ID_PACIENTE = {dni}'
         cursor.execute(query)
         row = cursor.fetchall()
         print(row)
