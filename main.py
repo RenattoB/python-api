@@ -21,8 +21,9 @@ async def obtenerHorario(request: Request):
     try:
         body = await request.json()
         idEspecialidad = body['idEspecialidad']
-        horario = consultarHorario(idEspecialidad)
-        return horario
+        dia = body['dia']
+        horario = consultarHorario(idEspecialidad, dia)
+        return {'horarios' : horario}
     except Exception as e :
         return f'Error: {e}' 
 

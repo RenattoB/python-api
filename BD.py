@@ -28,25 +28,28 @@ def consultarPaciente(dni):
     except (Exception, pyodbc.Error) as e :
        return f'Error: {e}'
 
-def consultarHorario(idEspecialidad):    
+def consultarHorario(idEspecialidad, dia):    
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT TOP 1 * FROM FN_VERHORARIO({idEspecialidad})'
-        cursor.execute(query)
+        query = f'SELECT * FROM FN_VERHORARIOS ((?) ,(?))'
+        cursor.execute(query, (idEspecialidad, dia, ))
         row = cursor.fetchall()
-        respuesta = {}
+        respuesta = []
+        if len(row) == 1:
+            if row[0][0] == None:
+                return 0
         if row:
             for i in row:
-                respuesta['codHorario'] = i[0]
-                respuesta['dia'] = i[1]
-                respuesta['hora'] = i[2]
-                respuesta['codDoctor'] = i[3]
+                dictTemp = {'idDoctor': i[0], 'dia': i[1], 'horaInicio': i[2], 'horaFin': i[3]}
+                respuesta.append(dictTemp)
             return respuesta
         else:
             return 0
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
+
+#print(consultarHorario(10, '2021-06-28'))
 
 def crearCita(idHorario, dni):    
     try:
