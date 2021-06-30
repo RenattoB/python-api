@@ -51,12 +51,12 @@ def consultarHorario(idEspecialidad, dia):
 
 #print(consultarHorario(10, '2021-06-28'))
 
-def crearCita(idHorario, dni):    
+def crearCita(idDoctor, idPaciente, fecha, horaInicio, horaSalida):    
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'EXEC SP_CREAR_CITA {idHorario}, {dni}'
-        cursor.execute(query)
+        query = f'EXEC SP_CREARCITA ?, ?, ?, ?, ?'
+        cursor.execute(query, (idDoctor, idPaciente, fecha, horaInicio, horaSalida, ))
         cursor.commit()
         cursor.close()
         conn.close()
@@ -68,13 +68,13 @@ def verCitas(dni):
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'SELECT * FROM FN_VERCITA({dni})'
+        query = f'SELECT * FROM FN_VERCITA ({dni}) ORDER BY FECHA, HORA_INICIO'
         cursor.execute(query)
         row = cursor.fetchall()
         respuesta = []
         if row:
             for i in row:
-                dictTemp = {"codCita" : i[0], "fecha": i[1], "hora" : i[2], "nombreCita" : i[3]}
+                dictTemp = {"codCita" : i[0], "fecha": i[1], "horaInicio" : i[2], "horaSalida" : i[3], "especialidad" : i[4]}
                 respuesta.append(dictTemp)
             return respuesta
         else: 
