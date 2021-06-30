@@ -1,5 +1,6 @@
 import pyodbc
 import json
+from datetime import datetime, timedelta
 
 
 with open('appsetings.json', 'r') as jsonFile:
@@ -36,16 +37,35 @@ def consultarHorario(idEspecialidad, dia):
         cursor.execute(query, (idEspecialidad, dia, ))
         row = cursor.fetchall()
         respuesta = []
+        recibioHorarios = False
+        recibioRecomendacion = False
         if len(row) == 1:
             if row[0][0] == None:
-                return 0
+                fechaRecomendada = None
+                while recibioHorarios == False:
+                    dia = datetime.strptime(dia, "%Y-%m-%d")
+                    dia = dia + timedelta(days=1)
+                    dia = datetime.strftime(dia, "%Y-%m-%d")
+                    query2 = f'SELECT TOP 1 * FROM FN_VERHORARIOS ((?) ,(?))'
+                    cursor.execute(query2, (idEspecialidad, dia, ))
+                    row = cursor.fetchall()
+                    if len(row) != 0:
+                        if row[0][0] != None:
+                            recibioHorarios = True
+                            recibioRecomendacion = True
+                            fechaRecomendada = dia
+                            print(f'fecha recomendada: {fechaRecomendada}')
+                            break
+                return {"horarios": 0, "recibioRecomendacion": recibioRecomendacion, "fechaRecomendada": fechaRecomendada}
+        else:
+            recibioHorarios = True
         if row:
             for i in row:
                 dictTemp = {'idDoctor': i[0], 'dia': i[1], 'horaInicio': i[2], 'horaFin': i[3]}
                 respuesta.append(dictTemp)
-            return respuesta
+            return {"horarios": respuesta, "recibioRecomendacion": recibioRecomendacion}
         else:
-            return 0
+            return {"horarios" : 0, "recibioRecomendacion": recibioRecomendacion}
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
 

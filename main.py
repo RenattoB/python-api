@@ -23,7 +23,11 @@ async def obtenerHorario(request: Request):
         idEspecialidad = body['idEspecialidad']
         dia = body['dia']
         horario = consultarHorario(idEspecialidad, dia)
-        return {'horarios' : horario}
+        print(f'horario: {horario}')
+        if horario['recibioRecomendacion'] == False:
+            return {'horarios' : horario['horarios']}
+        else:
+            return{'horarios': 0, 'fechaRecomendacion': horario['fechaRecomendada']}
     except Exception as e :
         return f'Error: {e}' 
 
