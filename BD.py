@@ -106,7 +106,7 @@ def eliminarBDCita(idCita):
     try:
         conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
         cursor = conn.cursor()
-        query = f'EXEC CANCELARCITA {idCita}'
+        query = f'EXEC SP_ELIMINARCITA {idCita}'
         cursor.execute(query)
         cursor.commit()
         cursor.close()
