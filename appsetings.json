@@ -1,7 +1,0 @@
-{
-    "server": "clinicusildb.database.windows.net",
-    "database" : "clinicDB",
-    "username" : "inteligencia",
-    "password" : "inteligenci@2021",   
-    "driver" : "{ODBC Driver 17 for SQL Server}"
-}
