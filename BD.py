@@ -4,13 +4,14 @@ from datetime import datetime, timedelta
 import smtplib, ssl
 
 
-with open('appsetings.json', 'r') as jsonFile:
+with open('appsettings.json', 'r') as jsonFile:
     body = json.load(jsonFile)
     server = body['server']
     database = body['database']
     username = body['username']
     password = body['password']   
     driver = body['driver']
+    passwordEmail = body['emailPassword']
 
 
 def consultarPaciente(dni):
@@ -142,7 +143,7 @@ def enviarCorreoReserva(especialidad, nombreDoctor, fecha, horaInicio, horaFin, 
     smtp_server = "smtp.gmail.com"
     port = 587  # For starttls
     sender_email = "irestacademy@gmail.com"
-    password = "misterselacome"
+    password = passwordEmail
     message = f"""\
     Subject: Reserva cita
 
