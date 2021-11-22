@@ -20,6 +20,7 @@ async def consultaPaciente(request: Request):
 async def obtenerHorario(request: Request):
     try:
         body = await request.json()
+        print(f'{body}')
         idEspecialidad = body['idEspecialidad']
         dia = body['dia']
         horario = consultarHorario(idEspecialidad, dia)
@@ -29,6 +30,7 @@ async def obtenerHorario(request: Request):
         else:
             return{'horarios': 0, 'fechaRecomendacion': horario['fechaRecomendada']}
     except Exception as e :
+        print(f'Error: {e}')
         return f'Error: {e}' 
 
 #Crear cita
@@ -39,6 +41,7 @@ async def reservarCita(request: Request):
         print(body)
         idDoctor, idPaciente, fecha, horaInicio, horaSalida = body['idDoctor'], body['idPaciente'], body['fecha'], body['horaInicio'], body['horaSalida']
         nuevaCita = crearCita(idDoctor, idPaciente, fecha, horaInicio, horaSalida)
+        print(nuevaCita)
         return nuevaCita
     except Exception as e :
         return f'Error: {e}' 
@@ -54,8 +57,7 @@ async def reservarCita(request: Request):
     except Exception as e :
         return f'Error: {e}' 
 
-#Eliminar cita         
-
+#Eliminar cita 
 @app.post('/eliminarCita')
 async def eliminarCita(request: Request):
     try:

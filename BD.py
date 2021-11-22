@@ -1,6 +1,7 @@
 import pyodbc
 import json
 from datetime import datetime, timedelta
+import smtplib, ssl
 
 
 with open('appsetings.json', 'r') as jsonFile:
@@ -78,8 +79,11 @@ def crearCita(idDoctor, idPaciente, fecha, horaInicio, horaSalida):
         query = f'EXEC SP_CREARCITA ?, ?, ?, ?, ?'
         cursor.execute(query, (idDoctor, idPaciente, fecha, horaInicio, horaSalida, ))
         cursor.commit()
-        cursor.close()
+        cursor.close()        
         conn.close()
+        especialidad, nombreDoctor, emailPaciente = retrieveDoctorEspecialidad(idDoctor, idPaciente)
+        print(f'especialidad: {especialidad}, nombreDoctor: {nombreDoctor}, email paciente: {emailPaciente}')
+        enviarCorreoReserva(especialidad, nombreDoctor, fecha, horaInicio, horaSalida, emailPaciente)
         return 1
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
@@ -114,6 +118,61 @@ def eliminarBDCita(idCita):
         return 1
     except (Exception, pyodbc.Error) as e :
         return f'Error: {e}' 
+
+
+
+def retrieveDoctorEspecialidad(idDoctor, idPaciente):
+    try:
+        conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+        query = 'SELECT TOP 1 TE.NOMBRE, (TD.NOMBRE + \' \' + TD.APELLIDOS) AS NOMBRE_DOCTOR FROM T_DOCTOR TD INNER JOIN T_ESPECIALIDAD TE ON TD.ID_ESPECIALIDAD = TE.ID_ESPECIALIDAD WHERE TD.ID_DOCTOR = {}'.format(idDoctor)         
+        print(query)
+        cursor.execute(query)
+        row = cursor.fetchall()       
+        query2 = f'SELECT TOP 1 EMAIL FROM T_PACIENTE WHERE ID_PACIENTE = \'{idPaciente}\''
+        print(query2)
+        cursor.execute(query2)
+        row2 = cursor.fetchall() 
+        return row[0][0], row[0][1], row2[0][0]        
+    except (Exception, pyodbc.Error) as e :
+        return f'Error: {e}' 
+    
+
+def enviarCorreoReserva(especialidad, nombreDoctor, fecha, horaInicio, horaFin, usuariocorreo):
+    smtp_server = "smtp.gmail.com"
+    port = 587  # For starttls
+    sender_email = "irestacademy@gmail.com"
+    password = "misterselacome"
+    message = f"""\
+    Subject: Reserva cita
+
+    Se ha realizado la siguiente reserva: 
+        * Doctor: {nombreDoctor}
+        * Especialidad: {especialidad}
+        * Fecha: {fecha}
+        * Hora de inicio: {horaInicio}
+        * Hora de fin: {horaFin}
+    """    
+    print(f'Mensaje a enviar: {message}')
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    # Try to log in to server and send email
+    try:
+        server = smtplib.SMTP(smtp_server,port)
+        server.ehlo() # Can be omitted
+        server.starttls(context=context) # Secure the connection
+        server.ehlo() # Can be omitted
+        server.login(sender_email, password)
+        server.sendmail(sender_email, usuariocorreo, message)
+        print('correo enviado con exito')
+    except Exception as e:
+        # Print any error messages to stdout
+        print(e)
+    finally:
+        server.quit() 
+
+
 
 
 
